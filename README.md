@@ -28,3 +28,47 @@ Clone the repository and install the necessary dependencies:
 git clone [https://github.com/YourUsername/A2NLP-StanceNakba2026-SubtaskB-AraBERTv02-Twitter.git](https://github.com/YourUsername/A2NLP-StanceNakba2026-SubtaskB-AraBERTv02-Twitter.git)
 cd A2NLP-StanceNakba2026-SubtaskB-AraBERTv02-Twitter
 pip install -r requirements.txt
+
+## 📜 Citation
+If you find this work useful, please cite our paper published in the LREC 2026 proceedings:
+@inproceedings{nairat2026a2nlp,
+  author    = {Nairat, Alaa and Nairat, Aysar},
+  title     = {A2NLP at StanceNakba Shared Task: Fine-Tuned AraBERT for Topic-Based Arabic Stance Detection},
+  booktitle = {Proceedings of the 15th International Conference on Language Resources and Evaluation (LREC’26)},
+  month     = {May},
+  year      = {2026},
+  address   = {Palma, Spain},
+  publisher = {European Language Resources Association (ELRA)}
+}
+
+##  Model Inference
+You can use the model directly from the Hugging Face Hub:
+```
+import torch
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
+
+MODEL_NAME = "aomar85/A2NLP-STANCENAKBA2026-CROSS-TOPIC"
+
+tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
+model = AutoModelForSequenceClassification.from_pretrained(MODEL_NAME)
+
+topic = "التطبيع مع اسرائيل"
+sentence = "التطبيع مرفوض بشكل كامل ولا يخدم القضية"
+text = f"الهدف: {topic} [SEP] الموقف من: {sentence}"
+
+inputs = tokenizer(text, return_tensors="pt", truncation=True, padding="max_length", max_length=128)
+
+with torch.no_grad():
+    logits = model(**inputs).logits
+    prediction = torch.argmax(logits, dim=1).item()
+
+# Mapping: 0: Pro, 1: Against, 2: Neutral
+print(f"Predicted Stance: {prediction}")
+```
+## 👥 Team & Affiliations
+    - Alaa Nairat - Birzeit University (anairat@birzeit.edu)
+    
+    - Aysar Nairat - Modern University College (aysar.nairat@muc.edu.ps)
+
+## ⚖️ License
+This project is licensed under the Apache License 2.0.
